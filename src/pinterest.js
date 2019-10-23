@@ -1,10 +1,49 @@
 import memoizeOne from 'memoize-one';
+import React from 'react';
+
+function makeUsePinterest(endpoint, pagination=true) {
+  return function(...args) {
+    const [responseState, setResponseState] = React.useState(pagination ? {} : []);
+    const [next, setNext] = React.useState(null);
+    const callback = React.useCallback((response) => {
+      const nextResponse = pagination ? response :  [...responseState, response];
+      setResponseState(nextResponse);
+      if (response.hasNext){
+        if (pagination) {
+          setNext(response.next);          
+        } else {
+          response.next();
+        }
+      } else {
+          setNext(null);
+      }
+    }, [responseState]);
+    React.useEffect(() => {
+      endpoint(...args, callback);
+    }, []);
+    return {response: responseState, next};
+  }
+}
+
+export const useMe = makeUsePinterest(window.PDK.me);
+export function useBoards() {
+  return useMe('boards', {fields: 'id,name,image[small]'});
+}
+export const useRequestAll = makeUsePinterest(window.PDK.request, false);
+export function usePins(boardId) {
+  return useRequestAll(`/boards/${boardId}/pins`, {fields: 'image[original],id,note'});
+}
 
 const simplePromise = (cbfunc) => (...args) => {
+  let results = [];
   return new Promise((resolve, reject) => {
     cbfunc(...args, (response) => {
       console.log('response', response);
       if (response.data) {
+        results.push(response.data);
+        if (response.hasNext) {
+          response.next();
+        }
         resolve(response);
       } else {
         reject(response);

@@ -1,27 +1,16 @@
-import { mount, route } from 'navi'
-import { Router, View } from 'react-navi'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import React from 'react';
 import ErrorBoundary from 'react-error-boundary';
 import './App.css';
-import { AuthProvider, LoginButton } from './PinterestAuth';
+import { AuthProvider, LoginButton, useAuth } from './PinterestAuth';
 import { Landing } from './Landing';
 import { Board } from './Board';
-import { getBoards, getPins } from './pinterest';
-
-const routes =
-  mount({
-    '/': route({
-      title: "Plantilist",
-      getData: () => getBoards(),
-      view: <Landing />,
-    }),
-    '/boards/:boardId': route({
-      async getView(request) {
-        const pins = await getPins(request.params.boardId);
-        return <Board pins={pins} />
-      }
-    })
-  })
+import { useHistory } from "react-router-dom";
 
 const MyFallbackComponent = ({ componentStack, error }) => (
   <div>
@@ -37,25 +26,53 @@ function PageContainer({children}) {
   <main>
     <AuthProvider>
       <ErrorBoundary FallbackComponent={MyFallbackComponent}>
-        {children}
+        <React.Suspense fallback={"loading..."}>
+          {children}
+        </React.Suspense>
       </ErrorBoundary>
-      <LoginButton />
     </AuthProvider>
   </main>
   )
 }
 
+function EnsureLogin() {
+  const [session] = useAuth();
+  if (!session) {
+    return <Redirect to={"/login"} />
+  }
+  return null;
+}
+
+function Login() {
+  const [session] = useAuth();
+  const history = useHistory();
+  if (session) {
+    history.goBack();
+    return null;
+  } else {
+    return <LoginButton />
+  }
+}
+
 function App() {
   return (
-    <AuthProvider>
-      <Router routes={routes}>
-        <PageContainer>
-          <React.Suspense fallback={"loading..."}>
-            <View />
-          </React.Suspense>
-        </PageContainer>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <PageContainer>
+          <EnsureLogin />
+          <Switch>
+            <Route exact path="/">
+              <Landing />
+            </Route>
+            <Route exact path="/boards/:boardId">
+              <Board />
+            </Route>
+            <Route path="/boards/:boardOwner/:boardName">
+              <Board />
+            </Route>
+            <Route path="/login" render={() => <Login/>}/>
+          </Switch>
+      </PageContainer>
+    </Router>
   );
 }
 

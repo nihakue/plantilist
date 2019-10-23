@@ -1,14 +1,25 @@
 import React from 'react';
-import { Link, useCurrentRoute } from 'react-navi'
+import { Link } from 'react-navi'
+import { useBoards } from './pinterest';
 
 export function Landing() {
-  const {data: boards} = useCurrentRoute();
-  console.log('boards', boards);
+  const {response, next} = useBoards();
+  if (!response || !response.data) {
+    return null;
+  }
+  
+  if (response.error) {
+    throw response.error || Error("No response data");
+  }
+
+  const {data: boards} = response;
+
   return (
   <div>
     <ul>
-      {boards.data.map(({id, name}) => <li key={id}><Link href={`/boards/${id}`}>{name}</Link></li>)}
+      {boards.map(({id, name}) => <li key={id}><Link href={`/boards/${id}`}>{name}</Link></li>)}
     </ul>
+    {next && <button onClick={next}>next</button>}
     <details>
       <summary>Privacy Policy</summary>
       <p>Plantilist does not store any of your data, and does not use any storage at all other than what the Pinterest javascript SDK uses for session tracking</p>

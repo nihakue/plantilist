@@ -1,4 +1,8 @@
 import React from 'react';
+import {
+  useParams
+} from "react-router-dom";
+import { usePins } from './pinterest';
 import './Board.css';
 
 function Pin({pin}) {
@@ -10,11 +14,19 @@ function Pin({pin}) {
   )
 }
 
-export function Board({pins}) {
-  console.log(pins);
+export function Board() {
+  const {boardId, boardOwner, boardName} = useParams();
+  const boardIdentifier = boardId || `${boardOwner}/${boardName}`;
+  const {response} = usePins(boardIdentifier);
+  if (!response.reduce) {
+    return null;
+  }
+  console.log(response);
+  const pins = response.reduce((acc, curr) => [...acc, ...(curr.data || [])], [])
+
   return (
   <div className={"grid"}>
-    {pins.data.map(pin => <Pin id={pin.id} pin={pin} />)}
+    {pins.map(pin => <Pin key={pin.id} pin={pin} />)}
   </div>
   )
 }
