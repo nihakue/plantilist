@@ -18,10 +18,10 @@ export function LoginButton() {
     } else {
       console.error(response);
     }
-  }, [])
+  }, [setSession])
   const login = React.useCallback(() => {
     window.PDK.login({scope: 'read_public,read_private'}, onLogin)
-  }, [])
+  }, [onLogin])
   if (session) {
     return null;
   }
