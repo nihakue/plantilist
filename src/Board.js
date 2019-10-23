@@ -14,7 +14,7 @@ export function Board({pins}) {
   console.log(pins);
   return (
   <div className={"grid"}>
-    {pins.map(pin => <Pin id={pin.id} pin={pin} />)}
+    {pins.data.map(pin => <Pin id={pin.id} pin={pin} />)}
   </div>
   )
 }

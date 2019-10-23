@@ -5,7 +5,7 @@ const simplePromise = (cbfunc) => (...args) => {
     cbfunc(...args, (response) => {
       console.log('response', response);
       if (response.data) {
-        resolve(response.data);
+        resolve(response);
       } else {
         reject(response);
       }
@@ -17,9 +17,9 @@ const me = memoizeOne(simplePromise(window.PDK.me));
 const request = memoizeOne(simplePromise(window.PDK.request));
 
 export async function getBoards() {
-  // return {"data": [{"image": {"small": {"url": null, "width": 30, "height": 30}}, "id": "543246842490896739", "name": "Test"}, {"image": {"small": {"url": "https://i.pinimg.com/30x30/e4/7f/29/e47f29c381fc6c381d9f8a99f7fde695.jpg", "width": 30, "height": 30}}, "id": "543246842490896740", "name": "Kitchen Ideas"}]}
-  const boards = await me('boards', {fields: 'id,name,image[small]'});
-  return boards;
+  return {data: [{"image": {"small": {"url": null, "width": 30, "height": 30}}, "id": "543246842490896739", "name": "Test"}, {"image": {"small": {"url": "https://i.pinimg.com/30x30/e4/7f/29/e47f29c381fc6c381d9f8a99f7fde695.jpg", "width": 30, "height": 30}}, "id": "543246842490896740", "name": "Kitchen Ideas"}]}
+  // const boards = await me('boards', {fields: 'id,name,image[small]'});
+  // return boards;
 }
 
 export async function getPins(boardId) {
