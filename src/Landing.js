@@ -5,7 +5,7 @@ export function Landing() {
   const {data} = useCurrentRoute();
   return (
   <ul>
-    {data.data.map(({id, name}) => <li key={id}><Link href={`/boards/${id}`}>{name}</Link></li>)}
+    {data.map(({id, name}) => <li key={id}><Link href={`/boards/${id}`}>{name}</Link></li>)}
   </ul>
   )
 }
