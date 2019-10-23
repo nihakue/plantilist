@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-navi'
+import { Link } from 'react-router-dom'
 import { useBoards } from './pinterest';
 
 export function Landing() {
@@ -17,7 +17,7 @@ export function Landing() {
   return (
   <div>
     <ul>
-      {boards.map(({id, name}) => <li key={id}><Link href={`/boards/${id}`}>{name}</Link></li>)}
+      {boards.map(({id, name}) => <li key={id}><Link to={`/boards/${id}`}>{name}</Link></li>)}
     </ul>
     {next && <button onClick={next}>next</button>}
     <details>
