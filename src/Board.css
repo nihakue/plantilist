@@ -1,0 +1,49 @@
+.masonry { 
+  display: flex;
+  flex-flow: row wrap;
+  margin-left: -8px; /* Adjustment for the gutter */
+  width: 100%;
+}
+
+.masonry-brick {
+  flex: auto;
+  height: 250px;
+  min-width: 150px;
+  margin: 0 8px 8px 0; /* Some gutter */
+}
+
+/* .grid {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
+  grid-auto-flow: row dense;
+} */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-rows: repeat(6, 300px);
+  grid-gap: 3rem;
+  grid-auto-flow: dense;
+}
+/* 
+.grid-item {
+  min-height: 300px;
+} */
+
+main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wall{
+	columns:4;
+    column-gap: 1em;
+}
+
+.brick{
+	margin-bottom:1em;
+	/* No cross browser 'break-inside' property being supported yet: */
+	display:inline-block;
+}
