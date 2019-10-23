@@ -3,11 +3,13 @@ import React from 'react';
 
 function makeUsePinterest(endpoint, pagination=true) {
   return function(...args) {
+    const resp = React.useRef(pagination ? {} : []);
     const [responseState, setResponseState] = React.useState(pagination ? {} : []);
     const [next, setNext] = React.useState(null);
     const callback = React.useCallback((response) => {
-      const nextResponse = pagination ? response :  [...responseState, response];
+      const nextResponse = pagination ? response :  [...resp.current, response];
       setResponseState(nextResponse);
+      resp.current = nextResponse;
       if (response.hasNext){
         if (pagination) {
           setNext(response.next);          
@@ -17,11 +19,11 @@ function makeUsePinterest(endpoint, pagination=true) {
       } else {
           setNext(null);
       }
-    }, [responseState]);
+    }, []);
     React.useEffect(() => {
       endpoint(...args, callback);
     }, []);
-    return {response: responseState, next};
+    return {response: resp.current, next};
   }
 }
 
