@@ -3,13 +3,14 @@ import {
   useParams
 } from "react-router-dom";
 import { usePins } from './pinterest';
+import { Masonry } from './Masonry';
 import './Board.css';
 
 function Pin({pin}) {
   return (
-    <div className={"brick"}>
-      <h3>{pin.note || ""}</h3>
+    <div className={"grid-brick"}>
       <img alt={pin.note} src={pin.image.original.url}></img>
+      <h4>{pin.note || ""}</h4>
     </div>
   )
 }
@@ -21,12 +22,11 @@ export function Board() {
   if (!response.reduce) {
     return null;
   }
-  console.log(response);
   const pins = response.reduce((acc, curr) => [...acc, ...(curr.data || [])], [])
 
   return (
-  <div className={"grid"}>
+  <Masonry gap={'1.2rem'}>
     {pins.map(pin => <Pin key={pin.id} pin={pin} />)}
-  </div>
+  </Masonry>
   )
 }

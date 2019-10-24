@@ -10,7 +10,7 @@ import './App.css';
 import { AuthProvider, LoginButton, useAuth } from './PinterestAuth';
 import { Landing } from './Landing';
 import { Board } from './Board';
-import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const MyFallbackComponent = ({ componentStack, error }) => (
   <div>
@@ -37,21 +37,28 @@ function PageContainer({children}) {
 
 function EnsureLogin() {
   const [session] = useAuth();
+  const currentLocation = useLocation().pathname;
   if (!session) {
-    return <Redirect to={"/login"} />
+    return <Redirect to={{
+      pathname: "/login",
+      state: { referrer: currentLocation }
+    }} />
   }
   return null;
 }
 
 function Login() {
   const [session] = useAuth();
-  const history = useHistory();
-  if (session) {
-    history.goBack();
-    return null;
-  } else {
+  const location = useLocation();
+  const state = location.state || {};
+  console.log(state);
+  if (!session) {
     return <LoginButton />
   }
+  if (state.referrer) {
+    return <Redirect to={state.referrer} />
+  }
+  return <Redirect to={'/'} />
 }
 
 function App() {

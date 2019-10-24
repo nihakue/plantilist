@@ -20,16 +20,18 @@ function makeUsePinterest(endpoint, pagination=true) {
           setNext(null);
       }
     }, []);
+
     React.useEffect(() => {
       endpoint(...args, callback);
     }, []);
-    return {response: resp.current, next};
+
+    return {response: responseState, next};
   }
 }
 
 export const useMe = makeUsePinterest(window.PDK.me);
 export function useBoards() {
-  return useMe('boards', {fields: 'id,name,image[small]'});
+  return useMe('boards', {fields: 'id,name'});
 }
 export const useRequestAll = makeUsePinterest(window.PDK.request, false);
 export function usePins(boardId) {

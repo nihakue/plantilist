@@ -26,7 +26,7 @@ export function LoginButton() {
     window.PDK.login({scope: 'read_public,read_private'}, onLogin)
   }, [onLogin])
   if (session) {
-    return null;
+    return <p>Logged in</p>;
   }
   return <button onClick={login}>Login</button>
 }
