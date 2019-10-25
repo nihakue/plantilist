@@ -38,6 +38,9 @@ function PageContainer({children}) {
 function EnsureLogin() {
   const [session] = useAuth();
   const currentLocation = useLocation().pathname;
+  if (currentLocation === '/login') {
+    return null;
+  }
   if (!session) {
     return <Redirect to={{
       pathname: "/login",
