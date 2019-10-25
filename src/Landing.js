@@ -44,7 +44,7 @@ export function Landing() {
         <p>You can view the Plantilist source code <a href="https://github.com/nihakue/plantilist">here</a></p>
       </details>
       <div>
-        <a href="javascript:(function(){if (!window.location.host.includes('pinterest')) {return;}const path = window.location.pathname;if (path.split('/').length === 4) {window.location.href = `https://plantilist.club${path}`;}})();">Plantilist It</a> <-- <span>Drag this link into your bookmarks bar and click on it when you're viewing a board in pinterest to load it in Plantilist!</span>
+        <a href="javascript:(function(){if (!window.location.host.includes('pinterest')) {return;}const path = window.location.pathname;if (path.split('/').length === 4) {window.location.href = `https://plantilist.club${path}`;}})();">Plantilist It</a><span> -- Drag this link into your bookmarks bar and click on it when you're viewing a board in pinterest to load it in Plantilist!</span>
       </div>
     </div>
   )
